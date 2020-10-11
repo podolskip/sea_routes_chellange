@@ -1,0 +1,4 @@
+export const ROUTES_DATA_GET_FROM_WEB = 'routesData/GET_FROM_WEB';
+
+export const ROUTES_DATA_GET_FROM_WEB_FULFILLED =
+  'routesData/GET_FROM_WEB_FULFILLED';

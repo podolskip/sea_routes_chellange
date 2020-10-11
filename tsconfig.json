@@ -4,22 +4,43 @@
     "lib": [
       "dom",
       "dom.iterable",
-      "esnext"
+      "esnext",
+      "es6"
     ],
+    "baseUrl": ".",
+    "outDir": "build/dist",
+    "module": "esnext",
+    "strictPropertyInitialization": false,
+    "sourceMap": true,
     "allowJs": true,
-    "skipLibCheck": true,
+    "jsx": "react",
+    "moduleResolution": "node",
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedLocals": true,
+    "noStrictGenericChecks": true,
+    "skipLibCheck": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
-    "moduleResolution": "node",
+    "strict": false,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "forceConsistentCasingInFileNames": false,
   },
+  "exclude": [
+    "node_modules",
+    "build",
+    "scripts",
+    "acceptance-tests",
+    "webpack",
+    "styleguide.config.js",
+    "src/setupTests.ts"
+  ],
   "include": [
-    "src"
+    "src", "images.d.ts", "__tests__/**/*.tsx"
   ]
 }

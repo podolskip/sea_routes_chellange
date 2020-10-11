@@ -17,7 +17,7 @@ lodash.clonedeep
 js-cookie
 react-loadable
 typestyle
-
+csvtojson
 
 cypres.io
 react-test-renderer
