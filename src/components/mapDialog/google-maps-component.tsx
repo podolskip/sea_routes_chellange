@@ -1,47 +1,92 @@
 import React from 'react';
 import { GoogleMap, Polyline } from '@react-google-maps/api';
+// Components
 import ScriptLoaded from './script-loaded';
+// TYPES
+import { IRoutedData } from 'src/store/routesData/routes-data.interfaces';
 
 export interface IPositionsForGoogleMaps {
   lat: number;
   lng: number;
 }
+export type FourElementArray<T> = [T, T, T, T];
 
 export interface GoogleMapsComponentProps {
-  positionsForGoogleMap: IPositionsForGoogleMaps[];
+  currentlySelectedRoute: IRoutedData;
 }
 
 export const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({
-  positionsForGoogleMap
+  currentlySelectedRoute
 }) => {
-  const [firstPosition] = positionsForGoogleMap;
-
+  let positionsForGoogleMap: FourElementArray<number>[] = JSON.parse(
+    currentlySelectedRoute.points
+  ) as FourElementArray<number>[];
+  let polylinesWithHeatMap: React.ReactElement[] = [];
   const containerStyle = {
     width: '100%',
     height: '400px'
   };
-
-  // check how it works
-  const center = {
-    lat: firstPosition.lat,
-    lng: firstPosition.lng
-  };
-
-  const path = [...positionsForGoogleMap];
-
-  const options = {
-    strokeColor: '#FF0000',
+  const polylineOptions = (
+    color: string,
+    paths: IPositionsForGoogleMaps[]
+  ) => ({
+    strokeColor: color,
     strokeOpacity: 0.8,
     strokeWeight: 2,
-    fillColor: '#FF0000',
+    fillColor: color,
     fillOpacity: 0.35,
     clickable: false,
     draggable: false,
     editable: false,
     visible: true,
     radius: 30000,
-    paths: [...positionsForGoogleMap],
+    paths,
     zIndex: 1
+  });
+
+  if (currentlySelectedRoute) {
+    polylinesWithHeatMap = positionsForGoogleMap.map(
+      (position, index, positionsArray) => {
+        const [lng, lat, , knots] = position;
+        if (index > 0) {
+          const [prevLng, prevLat, ,] = positionsArray[index - 1];
+          const newPath = [
+            { lat: prevLat, lng: prevLng },
+            { lat, lng }
+          ];
+          return (
+            <Polyline
+              path={newPath}
+              options={polylineOptions(
+                knots < 15 ? '#FF0000' : '#008000',
+                newPath
+              )}
+            />
+          );
+        } else {
+          const newPath = [
+            { lat, lng },
+            { lat, lng }
+          ];
+          return (
+            <Polyline
+              path={newPath}
+              options={polylineOptions(
+                knots < 15 ? '#FF0000' : '#008000',
+                newPath
+              )}
+            />
+          );
+        }
+      }
+    );
+  }
+
+  const [startingLng, startingLat] = positionsForGoogleMap[0] ?? [0, 90, 0, 0];
+
+  const center = {
+    lat: startingLat,
+    lng: startingLng
   };
 
   return (
@@ -52,7 +97,7 @@ export const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({
         center={center}
         zoom={4}
       >
-        <Polyline path={path} options={options} />
+        {polylinesWithHeatMap}
       </GoogleMap>
     </ScriptLoaded>
   );

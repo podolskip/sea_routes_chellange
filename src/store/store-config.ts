@@ -18,7 +18,7 @@ export default function storeConfig() {
   const store = createStore(
     rootReducer,
     compose(
-      applyMiddleware(...[epicMiddleware, routerHistoryMiddleware]),
+      applyMiddleware(...[routerHistoryMiddleware]),
       reduxDevExtensionSetup()
     )
   );

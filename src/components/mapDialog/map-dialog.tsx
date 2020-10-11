@@ -16,24 +16,8 @@ import { Theme } from '@material-ui/core/styles';
 import { Styles } from '@material-ui/core/styles/withStyles';
 import { withStyles } from '@material-ui/core/styles';
 import { IRoutedData } from 'src/store/routesData/routes-data.interfaces';
-import { IPositionsForGoogleMaps } from './google-maps-component';
 
 const defaultClasses: Styles<Theme, {}> = {
-  container: {
-    display: 'flex',
-    flexWrap: 'nowrap',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 'Calc(100vw-50)'
-  },
-  textField: {
-    margin: '0 15px',
-    width: '80vw'
-  },
-  getDataBtn: {
-    margin: '15px'
-  },
   upperCloseButton: {
     position: 'absolute',
     right: '10px',
@@ -49,27 +33,12 @@ export interface IMapDialogProps {
   closeDialogBox: () => void;
 }
 
-export type FourElementArray<T> = [T, T, T, T];
-
 export const MapDialog: React.FC<IMapDialogProps> = ({
   classes,
   analysisDialogOpen,
   currentlySelectedRoute,
   closeDialogBox
 }) => {
-  let positionsForGoogleMap: IPositionsForGoogleMaps[] = [];
-
-  if (currentlySelectedRoute) {
-    const getLatAngLngFromPosition = (position: FourElementArray<number>) => {
-      const [lng, lat, ,] = position;
-
-      return { lat, lng };
-    };
-    positionsForGoogleMap = (JSON.parse(
-      currentlySelectedRoute.points
-    ) as FourElementArray<number>[]).map(getLatAngLngFromPosition);
-  }
-
   return analysisDialogOpen ? (
     <Dialog
       fullWidth={true}
@@ -77,11 +46,11 @@ export const MapDialog: React.FC<IMapDialogProps> = ({
       open={analysisDialogOpen}
       onClose={closeDialogBox}
       aria-labelledby="max-width-dialog-title"
+      scroll={'body'}
     >
       <DialogTitle id="max-width-dialog-title">
         {`From: ${currentlySelectedRoute?.from_port} | Destination: ${currentlySelectedRoute?.to_port}`}
       </DialogTitle>
-
       <DialogContent>
         <IconButton
           aria-label="close"
@@ -92,7 +61,7 @@ export const MapDialog: React.FC<IMapDialogProps> = ({
         </IconButton>
         {currentlySelectedRoute && (
           <GoogleMapsComponent
-            positionsForGoogleMap={positionsForGoogleMap ?? []}
+            currentlySelectedRoute={currentlySelectedRoute ?? []}
           />
         )}
         <br />

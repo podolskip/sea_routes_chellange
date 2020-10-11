@@ -12,7 +12,7 @@ export const defaultClasses: Styles<Theme, {}> = {
   },
   formContainer: {
     display: 'flex',
-    flexWrap: 'nowrap',
+    flexWrap: 'wrap',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

@@ -1,65 +1,15 @@
-/* tslint:disable */
-/* eslint:disable */
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 // Components
-import ErrorBoundary from 'src/error-boundary';
+// import ErrorBoundary from 'src/views/app/error-boundary';
 import CsvFilePickerForm from 'src/components/csvFilePickerForm/csv-file-picker-form';
 import RoutePickerForm from 'src/components/routePickerForm/route-picker-form';
 // Types && styles
-import './App.css';
-import backgroundImage from 'src/assets/tanker_ship_from_top3.jpg';
-import { Styles } from '@material-ui/core/styles/withStyles';
-import { Theme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
-import { container, parallax } from './app.styles';
 import ModalLoader from 'src/components/modalLoader/modal-loader';
 import { IStoreState } from 'src/store/store.types';
-
-export const defaultClasses: Styles<Theme, {}> = {
-  header: {
-    ...parallax,
-    backgroundImage: `url(${backgroundImage})`
-  },
-  headerInfo: {
-    // backgroundColor: 'rgb(0,0,0)', /* Fallback color */
-    backgroundColor: 'rgba(0,0,0, 0.7)' /* Black w/opacity/see-through */,
-    color: 'white',
-    fontWeight: 'bold',
-    border: '3px solid #f1f1f1',
-    position: 'absolute',
-    top: '50%,',
-    left: '50%,',
-    transform: 'translate(10%, 50%)',
-    zIndex: 2,
-    width: '80%',
-    padding: '20px',
-    textAlign: 'center'
-  },
-  filePickerSection: {
-    ...container,
-    height: '400px'
-  },
-  routePickerSection: {
-    ...container,
-    ...parallax,
-    backgroundImage: `url(${backgroundImage})`
-    // filter: 'blur(8px)',
-  },
-  routePickerArticle: {
-    ...container,
-    width: '50%',
-    height: '100%',
-    backgroundColor: 'white',
-    borderRadius: '15px',
-    margin: '20px 0'
-  },
-  footer: {
-    ...container,
-    height: '200px'
-  }
-};
+import { defaultClasses } from './app.styles';
 
 export interface IAppProps {
   classes: { [key: string]: string };
@@ -68,7 +18,7 @@ export interface IAppProps {
 
 export const App: React.FC<IAppProps> = ({ classes, activeLoaders }) => {
   return (
-    <ErrorBoundary>
+    <>
       <header className={classes.header}>
         <div className={classes.headerInfo}>
           <h1>TANKER SHIP ROUTE TRACKER</h1>
@@ -90,10 +40,10 @@ export const App: React.FC<IAppProps> = ({ classes, activeLoaders }) => {
       </section>
       <footer className={classes.footer}>
         Created by : Patryk Podolski | firstname.lastname@gmail.com | 987 654
-        321
+        321 | 2k20
       </footer>
       <ModalLoader loaderOnOff={activeLoaders > 0} />
-    </ErrorBoundary>
+    </>
   );
 };
 

@@ -22,7 +22,7 @@ import { IRoutedData } from 'src/store/routesData/routes-data.interfaces';
 const defaultClasses: Styles<Theme, {}> = {
   container: {
     display: 'flex',
-    flexWrap: 'nowrap',
+    flexWrap: 'wrap',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -95,7 +95,7 @@ export class CsvFilePickerForm extends React.Component<
             required
             label="Route Picker"
             className={classes.textField}
-            helperText="Please provide valid http link to CSV file containing exported sea routes. Link should contain .csv extension, http:// prefix and should be free of empty spaces. e.g. https://s3-eu-west-1.amazonaws.com/logindex-dev-export/challenge/web_challenge.csv"
+            helperText="Please provide valid https link to CSV file containing exported sea routes. Link should contain .csv extension, https:// prefix and should be free of empty spaces. e.g. https://s3-eu-west-1.amazonaws.com/logindex-dev-export/challenge/web_challenge.csv"
             margin="normal"
             variant="outlined"
             multiline={true}

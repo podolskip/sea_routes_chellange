@@ -17,6 +17,7 @@
     "csvtojson": "^2.0.10",
     "highcharts": "^8.2.0",
     "highcharts-react-official": "^3.0.0",
+    "jest": "24.9.0",
     "lodash.clonedeep": "^4.5.0",
     "react": "^16.13.1",
     "react-async-script-loader": "^0.3.0",
@@ -86,5 +87,54 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "<rootDir>/__tests__/setup/setup-enzyme.ts"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/__tests__/setup/"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json",
+      "node"
+    ],
+    "modulePaths": [
+      "<rootDir>",
+      "<rootDir>/src"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "<rootDir>/src",
+      "<rootDir>/__tests__",
+      "src",
+      "__tests__"
+    ],
+    "transform": {
+      "\\.(ts|tsx)$": "ts-jest",
+      "^.+\\.(js|jsx)?$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(@material-ui.*?\\.js$))"
+    ],
+    "setupFiles": [
+      "raf/polyfill"
+    ],
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts|tsx|js)$",
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ],
+    "globals": {
+      "ts-jest": {
+        "diagnostics": {
+          "ignoreCodes": [
+            151001
+          ]
+        }
+      }
+    }
   }
 }

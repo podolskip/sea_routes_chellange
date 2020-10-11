@@ -7,31 +7,9 @@ import { Theme } from '@material-ui/core/styles';
 import { Styles } from '@material-ui/core/styles/withStyles';
 import { withStyles } from '@material-ui/core/styles';
 import { IRoutedData } from 'src/store/routesData/routes-data.interfaces';
-import { FourElementArray } from './map-dialog';
+import { FourElementArray } from './google-maps-component';
 
-const defaultClasses: Styles<Theme, {}> = {
-  container: {
-    display: 'flex',
-    flexWrap: 'nowrap',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 'Calc(100vw-50)'
-  },
-  textField: {
-    margin: '0 15px',
-    width: '80vw'
-  },
-  getDataBtn: {
-    margin: '15px'
-  },
-  upperCloseButton: {
-    position: 'absolute',
-    right: '10px',
-    top: '10px',
-    color: 'primary'
-  }
-};
+const defaultClasses: Styles<Theme, {}> = {};
 
 export interface SpeedChangeGraphProps extends HighchartsReact.Props {
   classes: { [key: string]: string };

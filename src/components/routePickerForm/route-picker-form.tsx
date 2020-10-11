@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 // Material ui Components
@@ -22,18 +21,10 @@ import { withStyles } from '@material-ui/core/styles';
 import { IStoreState } from 'src/store/store.types';
 import { IRoutedData } from 'src/store/routesData/routes-data.interfaces';
 import { defaultClasses } from './route-picker-form.styles';
-
-export interface IRoutePickerFormProps {
-  classes: { [key: string]: string };
-  routesData: IRoutedData[];
-}
-
-export interface IRoutePickerFormState {
-  fromDropdownPick: string;
-  toDropdownPick: string;
-  analysisDialogOpen: boolean;
-  currentlySelectedRoute: IRoutedData | null;
-}
+import {
+  IRoutePickerFormProps,
+  IRoutePickerFormState
+} from './route-picker.types';
 
 export class RoutePickerForm extends React.Component<
   IRoutePickerFormProps,
@@ -49,11 +40,30 @@ export class RoutePickerForm extends React.Component<
     };
   }
 
+  // HELPERS FROM PIPED ANONYMOUS methods
+  getDistinctPorts = (
+    port: string,
+    index: number,
+    portArray: string[]
+  ): boolean => portArray.indexOf(port) == index;
+
+  createOptionsWithPorts = (port: string, index: number) => (
+    <option key={index} value={port}>
+      {port}
+    </option>
+  );
+
+  filterRoutesBaseOnDropdowns = (
+    fromDropdownPick: string,
+    toDropdownPick: string
+  ) => ({ from_port, to_port }: IRoutedData) =>
+    from_port === fromDropdownPick && to_port === toDropdownPick;
+
+  // DROPDOWN CHANGE HANDLERS
   fromDropdownChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
     const { value: newFromDropdownPick } = event.target;
-    // const getDistinctPorts = (port:string,index:number, portArray: string[]) => portArray.indexOf(port) == index
 
     if (newFromDropdownPick === '') {
       this.setState({
@@ -61,7 +71,6 @@ export class RoutePickerForm extends React.Component<
         toDropdownPick: ''
       });
     }
-
     this.setState({
       fromDropdownPick: event.target.value
     });
@@ -75,6 +84,7 @@ export class RoutePickerForm extends React.Component<
     });
   };
 
+  // DIALOG LIFECYCLE HANDLERS
   routeIdItemButtonClick = (routeId: string) => (): void => {
     this.setState({
       analysisDialogOpen: true,
@@ -113,16 +123,9 @@ export class RoutePickerForm extends React.Component<
                 <option aria-label="None" value="" />
                 {this.props.routesData
                   .map(({ from_port }: IRoutedData) => from_port)
-                  .filter(
-                    (from_port, index, from_portArray) =>
-                      from_portArray.indexOf(from_port) == index
-                  )
+                  .filter(this.getDistinctPorts)
                   .sort()
-                  .map((from_port, index) => (
-                    <option key={index} value={from_port}>
-                      {from_port}
-                    </option>
-                  ))}
+                  .map(this.createOptionsWithPorts)}
               </Select>
             </FormControl>
             <FormControl variant="outlined" className={classes.formControl}>
@@ -146,16 +149,9 @@ export class RoutePickerForm extends React.Component<
                     ({ from_port }) => from_port === this.state.fromDropdownPick
                   )
                   .map(({ to_port }: IRoutedData) => to_port)
-                  .filter(
-                    (to_port, index, to_portArray) =>
-                      to_portArray.indexOf(to_port) == index
-                  )
+                  .filter(this.getDistinctPorts)
                   .sort()
-                  .map((to_port, index) => (
-                    <option key={index} value={to_port}>
-                      {to_port}
-                    </option>
-                  ))}
+                  .map(this.createOptionsWithPorts)}
               </Select>
             </FormControl>
           </form>
@@ -164,9 +160,10 @@ export class RoutePickerForm extends React.Component<
               this.state.toDropdownPick !== '' &&
               this.props.routesData
                 .filter(
-                  ({ from_port, to_port }: IRoutedData) =>
-                    from_port === this.state.fromDropdownPick &&
-                    to_port === this.state.toDropdownPick
+                  this.filterRoutesBaseOnDropdowns(
+                    this.state.fromDropdownPick,
+                    this.state.toDropdownPick
+                  )
                 )
                 .map(({ route_id, from_port, to_port }: IRoutedData) => (
                   <ListItem>
@@ -202,10 +199,6 @@ export class RoutePickerForm extends React.Component<
     );
   }
 }
-
-// const mapActionsToProps = {
-//   getRoutesDataFromWebFulfilled: (csvFileLink: IRoutedData[]) => routesDataActions.getRoutesDataFromWebFulfilled(csvFileLink)
-// }
 
 const mapStateToProps = ({ routesData }: IStoreState) => ({
   routesData
