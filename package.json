@@ -69,7 +69,6 @@
   "husky": {
     "hooks": {
       "pre-commit": "npm run prettier:write",
-      "pre-push": "jest",
       "post-merge": "npm install"
     }
   },
