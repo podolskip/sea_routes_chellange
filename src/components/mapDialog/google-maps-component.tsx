@@ -18,6 +18,7 @@ export interface GoogleMapsComponentProps {
 export const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({
   currentlySelectedRoute
 }) => {
+  let map = null;
   let positionsForGoogleMap: FourElementArray<number>[] = JSON.parse(
     currentlySelectedRoute.points
   ) as FourElementArray<number>[];
@@ -83,23 +84,58 @@ export const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({
   }
 
   const [startingLng, startingLat] = positionsForGoogleMap[0] ?? [0, 90, 0, 0];
+  const [endingLng, endingLat] = positionsForGoogleMap[
+    positionsForGoogleMap.length - 1
+  ] ?? [0, 90, 0, 0];
 
   const center = {
     lat: startingLat,
     lng: startingLng
   };
 
+  const onLoad = React.useCallback(function callback(map) {
+    const bounds = new (window as any).google.maps.LatLngBounds();
+    const startPort = new (window as any).google.maps.LatLng(
+      startingLat,
+      startingLng
+    );
+    const endPort = new (window as any).google.maps.LatLng(
+      endingLat,
+      endingLng
+    );
+    bounds.extend(startPort);
+    bounds.extend(endPort);
+
+    map.fitBounds(bounds);
+  }, []);
+
+  const onUnmount = React.useCallback(function callback(map) {
+    map = null;
+  }, []);
+
   return (
-    <ScriptLoaded>
-      <GoogleMap
-        id="maker"
-        mapContainerStyle={containerStyle}
-        center={center}
-        zoom={4}
-      >
-        {polylinesWithHeatMap}
-      </GoogleMap>
-    </ScriptLoaded>
+    <>
+      <h3>
+        {' '}
+        Below map shows sea route where
+        <span style={{ color: '#008000' }}> GREEN</span> represent places where
+        ship had speed of more or equal to 15[knot] while{' '}
+        <span style={{ color: '#FF0000' }}>RED</span> represents speed below
+        15[knot].
+      </h3>
+      <ScriptLoaded>
+        <GoogleMap
+          id="maker"
+          mapContainerStyle={containerStyle}
+          center={center}
+          zoom={4}
+          onLoad={onLoad}
+          onUnmount={onUnmount}
+        >
+          {polylinesWithHeatMap}
+        </GoogleMap>
+      </ScriptLoaded>
+    </>
   );
 };
 

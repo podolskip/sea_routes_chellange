@@ -5,6 +5,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 // Redux Actions
 import * as routesDataActions from 'src/store/routesData/routes-data.actions';
+import { clearAllLoaders } from 'src/store/loader/loader.actions';
 // Material ui Components
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -71,17 +72,25 @@ export class CsvFilePickerForm extends React.Component<
   getDataBtnClick = (): void => {
     const { isCsvFileLinkValid, csvFileLink } = this.state;
     if (isCsvFileLinkValid === IsCsvFileLinkValidENUM.yes) {
-      this.props.getRoutesDataFromWeb();
-      csv()
-        .on('error', (error: Error) => {
-          this.props.getRoutesDataFromWebFulfilled([]);
-        })
-        .fromStream(request.get(csvFileLink) as any)
-        .then(jsonObject => {
-          setTimeout(() => {
-            this.props.getRoutesDataFromWebFulfilled(jsonObject);
-          }, 1000);
-        });
+      try {
+        this.props.getRoutesDataFromWeb();
+        csv()
+          .on('error', (error: Error) => {
+            this.props.getRoutesDataFromWebFulfilled([]);
+          })
+          .fromStream(request.get(csvFileLink) as any)
+          .then(jsonObject => {
+            setTimeout(() => {
+              this.props.getRoutesDataFromWebFulfilled(jsonObject);
+            }, 1000);
+          });
+      } catch (error) {
+        window.alert(`It's highly likelly that link you provided is not valid. please double check it! 
+        Your LINK:
+        "${csvFileLink}"
+        `);
+        this.props.clearAllLoaders();
+      }
     }
   };
 
@@ -121,6 +130,7 @@ export class CsvFilePickerForm extends React.Component<
 }
 
 const mapActionsToProps = {
+  clearAllLoaders: () => clearAllLoaders(),
   getRoutesDataFromWeb: () => routesDataActions.getRoutesDataFromWeb(),
   getRoutesDataFromWebFulfilled: (csvFileLink: IRoutedData[]) =>
     routesDataActions.getRoutesDataFromWebFulfilled(csvFileLink)

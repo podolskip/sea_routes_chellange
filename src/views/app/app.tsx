@@ -2,7 +2,7 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 // Components
-// import ErrorBoundary from 'src/views/app/error-boundary';
+import ErrorBoundary from 'src/views/app/error-boundary';
 import CsvFilePickerForm from 'src/components/csvFilePickerForm/csv-file-picker-form';
 import RoutePickerForm from 'src/components/routePickerForm/route-picker-form';
 // Types && styles
@@ -18,7 +18,7 @@ export interface IAppProps {
 
 export const App: React.FC<IAppProps> = ({ classes, activeLoaders }) => {
   return (
-    <>
+    <ErrorBoundary>
       <header className={classes.header}>
         <div className={classes.headerInfo}>
           <h1>TANKER SHIP ROUTE TRACKER</h1>
@@ -43,7 +43,7 @@ export const App: React.FC<IAppProps> = ({ classes, activeLoaders }) => {
         321 | 2k20
       </footer>
       <ModalLoader loaderOnOff={activeLoaders > 0} />
-    </>
+    </ErrorBoundary>
   );
 };
 

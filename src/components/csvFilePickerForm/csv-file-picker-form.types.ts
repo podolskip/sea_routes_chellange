@@ -3,6 +3,7 @@ import { IRoutedData } from 'src/store/routesData/routes-data.interfaces';
 
 export interface ICsvFilePickerFormProps {
   classes: { [key: string]: string };
+  clearAllLoaders: () => IAppAction;
   getRoutesDataFromWeb: () => IAppAction;
   getRoutesDataFromWebFulfilled: (
     csvFileLink: IRoutedData[]

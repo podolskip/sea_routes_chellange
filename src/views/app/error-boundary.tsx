@@ -1,16 +1,21 @@
 import React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { ReactNode } from 'react-redux';
 import ErrorAppDialog from 'src/components/errorAppDialog/error-app-dialog';
+import { clearAllLoaders } from 'src/store/loader/loader.actions';
+import { IAppAction } from 'src/store/store.types';
 
 export interface IErrorBoundaryState {
   hasError: boolean;
   errorInfoFromApp: null | Error;
 }
 export interface IErrorBoundaryProps {
+  clearAllLoaders: () => IAppAction;
   children: ReactNode;
 }
 
-export default class ErrorBoundary extends React.Component<
+export class ErrorBoundary extends React.Component<
   IErrorBoundaryProps,
   IErrorBoundaryState
 > {
@@ -21,12 +26,13 @@ export default class ErrorBoundary extends React.Component<
       errorInfoFromApp: null
     };
   }
-  static getDerivedStateFromError(error: Error) {
+  getDerivedStateFromError = (error: Error) => {
+    this.props.clearAllLoaders();
     return {
       hasError: true,
       errorInfoFromApp: error
     };
-  }
+  };
 
   handleDialogClose = (): void => {
     this.setState({
@@ -47,3 +53,9 @@ export default class ErrorBoundary extends React.Component<
     );
   }
 }
+
+const mapActionsToProps = {
+  clearAllLoaders: (): IAppAction => clearAllLoaders()
+};
+
+export default compose(connect(null, mapActionsToProps))(ErrorBoundary);
