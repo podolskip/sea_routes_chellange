@@ -88,7 +88,11 @@ export class RoutePickerForm extends React.Component<
   routeIdItemButtonClick = (routeId: string) => (): void => {
     this.setState({
       analysisDialogOpen: true,
-      currentlySelectedRoute: this.props.routesData[Number(routeId)]
+      currentlySelectedRoute: this.props.routesData[
+        this.props.routesData.findIndex(
+          ({ route_id }: IRoutedData) => route_id === routeId
+        )
+      ]
     });
   };
 
